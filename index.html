@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Learning Tasks</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f1f5f9; padding-bottom: 70px; }
+    .page { display: none; padding: 20px; }
+    .active { display: block; }
+    .card { background: #fff; padding: 20px; border-radius: 14px; max-width: 650px; margin: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+    .logo { text-align: center; font-size: 28px; font-weight: bold; color: #2563eb; margin-bottom: 10px; }
+    .subtitle { text-align: center; color: #64748b; margin-bottom: 20px; }
+    input, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #cbd5e1; }
+    button { background: #2563eb; color: #fff; border: none; cursor: pointer; }
+    button:hover { background: #1d4ed8; }
+    .locked { color: #dc2626; font-weight: bold; }
+    .success { color: #16a34a; font-weight: bold; }.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; display: flex; justify-content: space-around; padding: 10px 0; }
+.bottom-nav button { background: none; border: none; color: #fff; font-size: 14px; cursor: pointer; }
+
+  </style>
+</head>
+<body><!-- PRE-REGISTRATION PAGE --><div id="preReg" class="page active">
+  <div class="card">
+    <div class="logo">E-Learning Tasks</div>
+    <div class="subtitle">Join and start earning from surveys</div><label>Full Name</label>
+<input type="text" id="preName" placeholder="Enter your full name" required />
+
+<label>Phone Number</label>
+<input type="tel" id="prePhone" placeholder="Enter your phone number" required />
+
+<label>Email Address</label>
+<input type="email" id="preEmail" placeholder="Enter your email" required />
+
+<p>Pay KES 300 via Paybill <strong>22872644</strong> using your name as account name.</p>
+<label>Upload Payment Screenshot</label>
+<iframe src="PASTE_PAYMENT_CONFIRMATION_FORM_EMBED_LINK_HERE" width="100%" height="450" frameborder="0"></iframe>
+
+<button onclick="submitPreReg()">Submit Registration & Payment</button>
+
+  </div>
+</div><!-- PENDING VERIFICATION PAGE --><div id="pending" class="page">
+  <div class="card">
+    <h2>Registration Submitted</h2>
+    <p>Your payment is pending verification. Once confirmed by the admin, you will gain access to the dashboard and surveys.</p>
+    <p class="locked">Status: Pending Verification</p>
+  </div>
+</div><!-- DASHBOARD PAGE --><div id="dashboard" class="page">
+  <div class="card">
+    <div class="logo">E-Learning Tasks</div>
+    <div class="subtitle">Earn by completing surveys</div><p><strong>Name:</strong> <span id="displayName">Not registered</span></p>
+<p><strong>Status:</strong> <span id="status" class="locked">Inactive</span></p>
+<p><strong>Total Earnings:</strong> KES <span id="earnings">0</span></p>
+
+  </div>
+</div><!-- SURVEY PAGE --><div id="survey" class="page">
+  <div class="card">
+    <h2>Available Survey</h2>
+    <p><strong>Reward:</strong> KES 150 per survey</p>
+    <p id="surveyLock" class="locked">Surveys are locked until your account is verified.</p>
+    <iframe id="googleForm" src="PASTE_SURVEY_FORM_EMBED_LINK_HERE" width="100%" height="600" frameborder="0" style="display:none;"></iframe>
+  </div>
+</div><!-- PAYMENT/DASHBOARD ACCESS PAGE --><div id="payment" class="page">
+  <div class="card">
+    <h2>Account & Withdrawals</h2>
+    <p>Your balance: KES <span id="withdrawBalance">0</span></p>
+    <p id="withdrawNote" class="locked">Minimum withdrawal is KES 1,500</p>
+    <button onclick="withdraw()">Request Withdrawal</button>
+  </div>
+</div><!-- BOTTOM NAVIGATION --><div class="bottom-nav">
+  <button onclick="showPage('dashboard')">Dashboard</button>
+  <button onclick="showPage('survey')">Survey</button>
+  <button onclick="showPage('payment')">Payment</button>
+</div><script>
+let activated = false;
+let earnings = 0;
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+function submitPreReg() {
+  const name = document.getElementById('preName').value;
+  const phone = document.getElementById('prePhone').value;
+  const email = document.getElementById('preEmail').value;
+  if(!name || !phone || !email) {
+    alert('Please fill in all fields and upload payment screenshot.');
+    return;
+  }
+  // After submission, show pending verification page
+  showPage('pending');
+  alert('Registration submitted! Await admin verification before accessing dashboard.');
+}
+
+function activateUser(name) {
+  // Call this manually after payment verification
+  activated = true;
+  earnings = 150; // initial survey earning
+  document.getElementById('displayName').textContent = name;
+  document.getElementById('status').textContent = 'Active';
+  document.getElementById('status').classList.remove('locked');
+  document.getElementById('status').classList.add('success');
+  document.getElementById('earnings').textContent = earnings;
+  document.getElementById('withdrawBalance').textContent = earnings;
+  document.getElementById('surveyLock').style.display = 'none';
+  document.getElementById('googleForm').style.display = 'block';
+  alert('User verified! Dashboard and surveys unlocked.');
+  showPage('dashboard');
+}
+
+function withdraw() {
+  if(earnings < 1500) {
+    alert('Withdrawal available only when earnings reach KES 1,500');
+    return;
+  }
+  alert('Withdrawal request sent. You will be contacted shortly.');
+}
+</script></body>
+</html>
